@@ -1,0 +1,101 @@
+---
+interface Props {
+  items: readonly { q: string; a: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="faq">
+  {
+    items.map((item) => (
+      <details>
+        <summary>
+          <span>{item.q}</span>
+          <span class="icon" aria-hidden="true" />
+        </summary>
+        <p>{item.a}</p>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .faq {
+    border-top: 1px solid var(--line);
+  }
+
+  details {
+    border-bottom: 1px solid var(--line);
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding-block: 1.4rem;
+    font-family: var(--serif);
+    font-size: var(--step-2);
+    line-height: 1.2;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .icon {
+    position: relative;
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    transition:
+      background-color 0.25s var(--ease),
+      border-color 0.25s var(--ease);
+  }
+
+  .icon::before,
+  .icon::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 12px;
+    height: 1.5px;
+    background: var(--ink);
+    transform: translate(-50%, -50%);
+    transition: transform 0.25s var(--ease);
+  }
+
+  .icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  details[open] .icon {
+    background: var(--fig);
+    border-color: var(--fig);
+  }
+
+  details[open] .icon::before,
+  details[open] .icon::after {
+    background: var(--paper);
+  }
+
+  details[open] .icon::after {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  summary:hover .icon {
+    border-color: var(--fig);
+  }
+
+  details p {
+    max-width: 680px;
+    padding-bottom: 1.6rem;
+    color: var(--ink-soft);
+  }
+</style>

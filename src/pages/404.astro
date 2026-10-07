@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import PageIntro from '../components/PageIntro.astro';
+---
+
+<Base title="Page not found" noindex>
+  <PageIntro eyebrow="404" align="center" lead="That page has moved or doesn’t exist. Let’s get you back to the good stuff.">
+    This table’s <em>empty</em>
+    <div slot="after" class="actions">
+      <a class="btn" href="/">Back to home</a>
+      <a class="btn btn-outline" href="/gallery">See the gallery</a>
+    </div>
+  </PageIntro>
+  <div class="spacer"></div>
+</Base>
+
+<style>
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 0.6rem;
+  }
+
+  .spacer {
+    height: clamp(40px, 8vw, 120px);
+  }
+</style>

@@ -1,0 +1,277 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import Awards from '../components/Awards.astro';
+import Testimonials from '../components/Testimonials.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { photos } from '../data/photos';
+import { venues } from '../data/site';
+
+const moments = [
+  {
+    title: 'Engagements & bridal showers',
+    text: 'Soft palettes, florals, Half & Half boards and dessert cups for the celebrations leading up to the day.',
+    photo: photos.bridalShowerManna,
+  },
+  {
+    title: 'Getting-ready mornings',
+    text: 'Mocktails and light grazing delivered to the bride’s home, so everyone is refreshed before the ceremony.',
+    photo: photos.mocktailsFlorals,
+  },
+  {
+    title: 'Receptions & welcome tables',
+    text: 'A Signature Long Board or full grazing table as the centrepiece guests gather around while photos are taken.',
+    photo: photos.signatureBoardFruitCheese,
+  },
+  {
+    title: 'Dessert tables & favours',
+    text: 'Cheesecake cups, dessert towers and personalised chocolate bars your guests can take home.',
+    photo: photos.dessertTablePink,
+  },
+];
+---
+
+<Base
+  title="Weddings & Nikahs"
+  description="Wedding and Nikah grazing tables, fruit boards, dessert tables and mocktail bars in Adelaide. Finalist, Wedding Industry Awards 2026 (SA)."
+>
+  <section class="intro">
+    <div class="container intro-grid">
+      <div class="intro-copy">
+        <p class="eyebrow" data-reveal>Weddings & Nikahs</p>
+        <h1 class="h1" data-reveal style="--reveal-delay: 0.05s">
+          For the day you’ll <em>remember</em>, and the table your guests will too.
+        </h1>
+        <p class="lead" data-reveal style="--reveal-delay: 0.1s">
+          From mocktails at the bride’s home to a 1.4m grazing centrepiece at the reception, we create fruit, grazing and dessert
+          tables that are styled to your colours and finished on site.
+        </p>
+        <div data-reveal style="--reveal-delay: 0.15s">
+          <Awards />
+        </div>
+        <a class="btn" href="/enquire?event=Wedding" data-reveal style="--reveal-delay: 0.2s">
+          Check your date <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+      <div class="intro-art" data-reveal style="--reveal-delay: 0.1s">
+        <Photo
+          photo={photos.nikahGrazing}
+          ratio="4 / 5"
+          shape="arch"
+          frame
+          loading="eager"
+          sizes="(min-width: 960px) 480px, 86vw"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tint" aria-labelledby="moments-title">
+    <div class="container">
+      <div class="head" data-reveal>
+        <p class="eyebrow">Through your celebrations</p>
+        <h2 class="h2" id="moments-title">Where we fit into <em>your day</em></h2>
+      </div>
+      <ul role="list" class="moments">
+        {
+          moments.map((m, i) => (
+            <li data-reveal style={`--reveal-delay: ${i * 0.08}s`}>
+              <Photo photo={m.photo} ratio="4 / 5" sizes="(min-width: 960px) 280px, (min-width: 600px) 46vw, 92vw" />
+              <h3>{m.title}</h3>
+              <p>{m.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="nikah-title">
+    <div class="container split">
+      <div class="split-art" data-reveal>
+        <Photo photo={photos.fullSetupGold} ratio="4 / 5" sizes="(min-width: 960px) 460px, 92vw" />
+      </div>
+      <div class="split-copy" data-reveal style="--reveal-delay: 0.1s">
+        <p class="eyebrow">Nikahs & cultural weddings</p>
+        <h2 class="h2" id="nikah-title">Halal-friendly, generous, and <em>made to impress</em></h2>
+        <p class="lead">
+          We’ve styled Nikahs and welcome parties at venues across Adelaide. Our grazing uses halal cold cuts, our dessert tables are
+          built to feed a crowd, and every setup is matched to your décor and colour palette.
+        </p>
+        <p>
+          Hosting 100 guests or more? We pair two Signature Boards with dessert cups and a mocktail bar so the table stays full
+          all evening.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tint" aria-labelledby="venues-title">
+    <div class="container venues-grid">
+      <div data-reveal>
+        <p class="eyebrow">Working with your team</p>
+        <h2 class="h2" id="venues-title">We work alongside your <em>venue, stylist and florist</em></h2>
+        <p class="lead">
+          We coordinate setup times with your venue and planner, work alongside your decorator and florist, and leave the table
+          ready for guests.
+        </p>
+      </div>
+      <div data-reveal style="--reveal-delay: 0.1s">
+        <h3 class="list-title">Venues we’ve styled</h3>
+        <ul role="list" class="venue-list">{venues.map((v) => <li>{v}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <Testimonials />
+
+  <CtaBand title="Planning your <em>wedding?</em>" text="Popular dates book out early. Send us your date and venue and we’ll confirm availability with a personalised quote." />
+</Base>
+
+<style>
+  .intro {
+    padding-block: clamp(48px, 7vw, 96px) var(--section);
+    overflow: hidden;
+  }
+
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: clamp(40px, 7vw, 112px);
+    align-items: center;
+  }
+
+  .intro-copy {
+    display: grid;
+    gap: 1.6rem;
+    justify-items: start;
+  }
+
+  .intro-art {
+    max-width: 480px;
+    width: 100%;
+    justify-self: end;
+    padding: 14px 0 0 14px;
+  }
+
+  @media (max-width: 859px) {
+    .intro-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .intro-art {
+      justify-self: start;
+      max-width: 420px;
+    }
+  }
+
+  .head {
+    display: grid;
+    gap: 1rem;
+    max-width: 720px;
+    margin-bottom: clamp(36px, 5vw, 56px);
+  }
+
+  .moments {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(16px, 2vw, 28px);
+  }
+
+  .moments li {
+    display: grid;
+    align-content: start;
+    gap: 0.8rem;
+  }
+
+  .moments h3 {
+    margin-top: 0.4rem;
+    font-size: var(--step-2);
+  }
+
+  .moments p {
+    color: var(--ink-soft);
+    font-size: 0.97rem;
+  }
+
+  @media (max-width: 959px) {
+    .moments {
+      grid-template-columns: 1fr 1fr;
+      row-gap: 40px;
+    }
+  }
+
+  @media (max-width: 539px) {
+    .moments {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: clamp(40px, 7vw, 112px);
+    align-items: center;
+  }
+
+  .split-art {
+    max-width: 460px;
+  }
+
+  .split-copy {
+    display: grid;
+    gap: 1.2rem;
+  }
+
+  .split-copy p:not(.eyebrow):not(.lead) {
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 859px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .venues-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: clamp(40px, 7vw, 112px);
+  }
+
+  .venues-grid > div:first-child {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+  }
+
+  .list-title {
+    margin-bottom: 1rem;
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .venue-list {
+    columns: 2;
+    column-gap: 2rem;
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    line-height: 1.3;
+  }
+
+  .venue-list li {
+    break-inside: avoid;
+    padding-block: 0.55rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  @media (max-width: 859px) {
+    .venues-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

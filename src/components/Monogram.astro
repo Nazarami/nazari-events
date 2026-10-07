@@ -1,0 +1,50 @@
+---
+/** The arch "N" mark. The arch echoes the event arches she styles; the N is drawn, not typeset, so it renders identically everywhere. */
+interface Props {
+  size?: number;
+  class?: string;
+  /** Filled arch with a light N, or an outlined arch with an ink N. */
+  variant?: 'solid' | 'line';
+}
+
+const { size = 56, class: className, variant = 'solid' } = Astro.props;
+---
+
+<svg
+  class:list={['monogram', `monogram--${variant}`, className]}
+  width={size}
+  height={size}
+  viewBox="0 0 64 64"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path class="arch" d="M10 60V30a22 22 0 0 1 44 0v30z"></path>
+  <g class="n">
+    <rect x="21" y="27" width="2.4" height="22"></rect>
+    <rect x="40.6" y="27" width="2.4" height="22"></rect>
+    <path d="M21 27h5.8l16.2 22h-5.8z"></path>
+    <rect x="18.2" y="26" width="8" height="1.6"></rect>
+    <rect x="37.8" y="26" width="8" height="1.6"></rect>
+    <rect x="18.2" y="48.2" width="8" height="1.6"></rect>
+  </g>
+</svg>
+
+<style>
+  .monogram--solid .arch {
+    fill: var(--fig);
+  }
+
+  .monogram--solid .n {
+    fill: var(--paper);
+  }
+
+  .monogram--line .arch {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.2;
+  }
+
+  .monogram--line .n {
+    fill: currentColor;
+  }
+</style>

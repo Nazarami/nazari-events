@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+import PageIntro from '../components/PageIntro.astro';
+import FaqList from '../components/FaqList.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { faqs, site } from '../data/site';
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<Base
+  title="FAQ"
+  description="How booking works, delivery and setup, travel, dietary requirements, deposits and more. Answers to common questions about Nazari Events."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faqLd)} slot="head" />
+
+  <PageIntro eyebrow="FAQ" lead="Everything you need to know about booking, delivery and setup. Can’t find your answer? Just ask.">
+    Questions, <em>answered</em>
+  </PageIntro>
+
+  <section class="faq-section">
+    <div class="container faq-grid">
+      <div data-reveal>
+        <FaqList items={faqs} />
+      </div>
+      <aside class="ask" data-reveal style="--reveal-delay: 0.1s">
+        <h2 class="h3">Still have a question?</h2>
+        <p>We’re happy to help you plan the right setup for your event.</p>
+        <ul role="list">
+          <li><a href={site.phoneHref}>{site.phone}</a></li>
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li><a href={site.socials.instagram.href} target="_blank" rel="noopener">DM us on Instagram</a></li>
+        </ul>
+        <a class="btn" href="/enquire">Request a quote <span class="arrow" aria-hidden="true">→</span></a>
+      </aside>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .faq-section {
+    padding-bottom: var(--section);
+  }
+
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: clamp(40px, 6vw, 96px);
+    align-items: start;
+  }
+
+  .ask {
+    position: sticky;
+    top: 112px;
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+    padding: 32px;
+    background: var(--linen);
+    border-radius: var(--radius);
+  }
+
+  .ask p {
+    color: var(--ink-soft);
+  }
+
+  .ask ul {
+    display: grid;
+    gap: 0.4rem;
+    margin: 0.2rem 0 0.6rem;
+  }
+
+  .ask a:not(.btn) {
+    color: var(--fig);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  @media (max-width: 859px) {
+    .faq-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .ask {
+      position: static;
+    }
+  }
+</style>

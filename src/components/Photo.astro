@@ -1,0 +1,100 @@
+---
+import { Picture } from 'astro:assets';
+import type { Photo as PhotoData } from '../data/photos';
+
+interface Props {
+  photo: PhotoData;
+  /** CSS aspect-ratio, e.g. "4 / 5". Omit to use the image's own ratio. */
+  ratio?: string;
+  shape?: 'rounded' | 'arch' | 'square';
+  /** Draws a thin offset arch/frame line behind the photo. */
+  frame?: boolean;
+  /** object-position for the crop, e.g. "50% 30%". */
+  position?: string;
+  sizes?: string;
+  loading?: 'eager' | 'lazy';
+  class?: string;
+}
+
+const {
+  photo,
+  ratio,
+  shape = 'rounded',
+  frame = false,
+  position,
+  sizes = '(min-width: 1200px) 600px, (min-width: 720px) 50vw, 100vw',
+  loading = 'lazy',
+  class: className,
+} = Astro.props;
+
+const widths = [400, 640, 900, 1200, 1600, 2000].filter((w) => w <= photo.src.width);
+---
+
+<div
+  class:list={['photo', `photo--${shape}`, { 'photo--frame': frame }, className]}
+  style={{ '--ratio': ratio, '--pos': position }}
+>
+  <div class="clip">
+    <Picture
+      src={photo.src}
+      alt={photo.alt}
+      widths={widths}
+      sizes={sizes}
+      formats={['avif', 'webp']}
+      loading={loading}
+      fetchpriority={loading === 'eager' ? 'high' : 'auto'}
+      decoding="async"
+    />
+  </div>
+</div>
+
+<style>
+  .photo {
+    position: relative;
+    --r: var(--radius);
+  }
+
+  .clip {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: var(--ratio, auto);
+    border-radius: var(--r);
+    background: var(--sand);
+    isolation: isolate;
+  }
+
+  .clip :global(picture),
+  .clip :global(img) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .clip :global(img) {
+    object-fit: cover;
+    object-position: var(--pos, center);
+  }
+
+  .photo--square {
+    --r: 0;
+  }
+
+  /* Top corners resolve to a perfect semicircle because the 999px radii get scaled to fit the width. */
+  .photo--arch {
+    --r: 999px 999px var(--radius) var(--radius);
+  }
+
+  .photo--frame::before {
+    content: '';
+    position: absolute;
+    inset: -14px 14px 14px -14px;
+    border: 1px solid color-mix(in srgb, var(--gold) 70%, transparent);
+    border-radius: var(--r);
+    pointer-events: none;
+  }
+
+  @media (max-width: 719px) {
+    .photo--frame::before {
+      inset: -10px 10px 10px -10px;
+    }
+  }
+</style>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nazarievents.com/sitemap-index.xml

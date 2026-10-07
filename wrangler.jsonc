@@ -1,0 +1,30 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nazari-events",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-10-01",
+  // worker-mailer (SMTP over TCP sockets) needs Node's Buffer.
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "routes": [
+    { "pattern": "nazarievents.com", "custom_domain": true },
+    { "pattern": "www.nazarievents.com", "custom_domain": true }
+  ],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    // The Worker runs first so it can redirect www and handle /api; everything else falls through to the static files.
+    "run_worker_first": true
+  },
+  // Enquiries are sent through the domain's MXroute mailbox and delivered to ENQUIRY_TO.
+  // The mailbox password is a secret: `npx wrangler secret put SMTP_PASSWORD`
+  "vars": {
+    "ENQUIRY_TO": "enquiries@nazarievents.com",
+    "SMTP_HOST": "witcher.mxrouting.net",
+    "SMTP_PORT": "465",
+    "SMTP_USER": "smtp@nazarievents.com"
+  }
+  // Optional spam protection: set TURNSTILE_SECRET with `npx wrangler secret put TURNSTILE_SECRET`
+  // and PUBLIC_TURNSTILE_SITE_KEY at build time to show the widget on /enquire.
+}

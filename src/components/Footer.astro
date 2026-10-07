@@ -1,0 +1,148 @@
+---
+import Logo from './Logo.astro';
+import Monogram from './Monogram.astro';
+import { nav, site } from '../data/site';
+
+const year = new Date().getFullYear();
+const socials = Object.values(site.socials);
+---
+
+<footer class="site-footer">
+  <div class="container grid">
+    <div class="brand">
+      <Monogram size={52} />
+      <Logo tone="paper" />
+      <p>Fruit, grazing, dessert and mocktail tables, styled and set up across Adelaide.</p>
+      <p class="formerly">Formerly {site.formerName}</p>
+    </div>
+
+    <nav aria-label="Footer">
+      <h2 class="col-title">Explore</h2>
+      <ul role="list">
+        <li><a href="/">Home</a></li>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+        <li><a href="/enquire">Request a quote</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class="col-title">Contact</h2>
+      <ul role="list">
+        <li><a href={site.phoneHref}>{site.phone}</a></li>
+        <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        <li class="plain">{site.location}</li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="col-title">Follow</h2>
+      <ul role="list">
+        {
+          socials.map((s) => (
+            <li>
+              <a href={s.href} rel="noopener" target="_blank">
+                {s.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div class="container legal">
+    <p>© {year} {site.name}. All rights reserved.</p>
+    <p>ABN {site.abn} · Registered & council approved</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--ink);
+    color: rgb(251 248 243 / 0.72);
+    padding-block: clamp(56px, 7vw, 96px) 32px;
+    font-size: 0.95rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1.6fr repeat(3, 1fr);
+    gap: 48px 32px;
+  }
+
+  .brand {
+    display: grid;
+    justify-items: start;
+    gap: 1.1rem;
+    max-width: 320px;
+  }
+
+  .formerly {
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    color: rgb(251 248 243 / 0.5);
+  }
+
+  .col-title {
+    margin-bottom: 1rem;
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--blush);
+  }
+
+  ul {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  a {
+    color: var(--paper);
+    text-decoration: none;
+    transition: opacity 0.2s var(--ease);
+  }
+
+  a:hover {
+    opacity: 0.7;
+  }
+
+  .plain {
+    color: rgb(251 248 243 / 0.72);
+  }
+
+  .legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    margin-top: clamp(48px, 6vw, 80px);
+    padding-top: 24px;
+    border-top: 1px solid rgb(251 248 243 / 0.14);
+    font-size: 0.82rem;
+    color: rgb(251 248 243 / 0.5);
+  }
+
+  @media (max-width: 859px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

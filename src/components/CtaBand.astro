@@ -1,0 +1,77 @@
+---
+import Photo from './Photo.astro';
+import { photos } from '../data/photos';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  text?: string;
+}
+
+const {
+  title = 'Have a date in mind?',
+  text = 'Tell us about your event and we’ll come back with a personalised quote. Enquiries are free, with no obligation.',
+} = Astro.props;
+---
+
+<section class="cta-band section-ink">
+  <div class="container grid">
+    <div class="copy" data-reveal>
+      <p class="eyebrow">Request a quote</p>
+      <h2 class="h1" set:html={title} />
+      <p class="lead">{text}</p>
+      <div class="actions">
+        <a class="btn btn-light" href="/enquire">Start your enquiry <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="btn btn-outline" href={site.phoneHref}>Call {site.phone}</a>
+      </div>
+    </div>
+    <div class="art" data-reveal style="--reveal-delay: 0.15s">
+      <Photo photo={photos.genderRevealBoard} ratio="4 / 5" shape="arch" sizes="(min-width: 960px) 380px, 70vw" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    padding-block: clamp(72px, 9vw, 128px);
+    overflow: hidden;
+    background: var(--fig-deep);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    align-items: center;
+    gap: clamp(40px, 6vw, 96px);
+  }
+
+  .copy {
+    display: grid;
+    gap: 1.4rem;
+    justify-items: start;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 0.6rem;
+  }
+
+  .art {
+    max-width: 380px;
+    justify-self: end;
+    width: 100%;
+  }
+
+  @media (max-width: 859px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .art {
+      justify-self: start;
+      max-width: 300px;
+    }
+  }
+</style>

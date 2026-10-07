@@ -1,0 +1,72 @@
+---
+import { awards } from '../data/site';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<ul role="list" class:list={['awards', className]}>
+  {
+    awards.map((a) => (
+      <li class="award">
+        <svg class="laurel" viewBox="0 0 40 40" aria-hidden="true">
+          <path d="M14 33c-5-3-8-9-7-16M26 33c5-3 8-9 7-16" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" />
+          <path d="M8.5 22c2.2-.2 3.8.8 4.6 2.6M7.4 17.6c2 .3 3.3 1.5 3.8 3.4M7.6 13c1.8.6 2.8 2 3 4M31.5 22c-2.2-.2-3.8.8-4.6 2.6M32.6 17.6c-2 .3-3.3 1.5-3.8 3.4M32.4 13c-1.8.6-2.8 2-3 4" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" />
+          <path d="M20 12.5l1.6 3.3 3.6.5-2.6 2.5.6 3.6-3.2-1.7-3.2 1.7.6-3.6-2.6-2.5 3.6-.5z" fill="currentColor" />
+        </svg>
+        <span class="text">
+          <span class="title">{a.title}</span>
+          <span class="event">{a.event}</span>
+          <span class="detail">{a.detail}</span>
+        </span>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .awards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 28px;
+  }
+
+  .award {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .laurel {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    color: var(--gold);
+  }
+
+  .text {
+    display: grid;
+    line-height: 1.25;
+  }
+
+  .title {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-ink);
+  }
+
+  .event {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+  }
+
+  .detail {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+</style>

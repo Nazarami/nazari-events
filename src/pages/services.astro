@@ -1,0 +1,405 @@
+---
+import Base from '../layouts/Base.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Photo from '../components/Photo.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { photos } from '../data/photos';
+import { packages, services } from '../data/site';
+
+const servicePhotos = {
+  fruit: photos.fruitBoardMarble,
+  grazing: photos.grazingCheeseRoses,
+  desserts: photos.cheesecakeCupsFerrero,
+  drinks: photos.mocktailsFlorals,
+  styling: photos.dessertTablePink,
+};
+
+const sizes = [
+  { size: '60cm', name: 'Classic Board', fit: 'Small gatherings, gifts and at-home celebrations' },
+  { size: '1m', name: 'Signature Board', fit: 'Birthdays, showers and family parties' },
+  { size: '1.2m', name: 'Signature Board', fit: 'Larger parties and corporate events' },
+  { size: '1.4m', name: 'Signature Long Board', fit: 'Weddings, Nikahs and statement centrepieces' },
+];
+---
+
+<Base
+  title="Services"
+  description="Signature fruit boards, grazing and cheese boards, dessert tables, mocktail bars and event styling in Adelaide. Every event is quoted to suit."
+>
+  <PageIntro
+    eyebrow="Services"
+    lead="Book a single statement board or the whole table. Everything is made fresh, delivered, and finished by us at your venue."
+  >
+    Fruit, grazing & dessert tables, <em>styled for your event</em>
+  </PageIntro>
+
+  <nav class="container jump" aria-label="Services on this page">
+    <ul role="list">
+      {services.map((s) => <li><a href={`#${s.id}`}>{s.name}</a></li>)}
+      <li><a href="#packages">Packages</a></li>
+    </ul>
+  </nav>
+
+  <div class="container rows">
+    {
+      services.map((s, i) => (
+        <section class:list={['row', { 'row--flip': i % 2 === 1 }]} id={s.id} aria-labelledby={`${s.id}-title`}>
+          <div class="row-art" data-reveal>
+            <Photo
+              photo={servicePhotos[s.id]}
+              ratio="4 / 5"
+              shape={i % 2 === 0 ? 'arch' : 'rounded'}
+              sizes="(min-width: 960px) 480px, 92vw"
+            />
+          </div>
+          <div class="row-copy" data-reveal style="--reveal-delay: 0.1s">
+            <span class="num">{String(i + 1).padStart(2, '0')}</span>
+            <h2 class="h2" id={`${s.id}-title`}>{s.name}</h2>
+            <p class="lead">{s.body}</p>
+            <ul role="list" class="details">
+              {s.details.map((d) => <li>{d}</li>)}
+            </ul>
+            <a class="link-arrow" href={`/enquire?interest=${s.id}`}>
+              Enquire about {s.name.toLowerCase()} <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <section class="section section-tint" aria-labelledby="sizes-title">
+    <div class="container">
+      <div class="head" data-reveal>
+        <p class="eyebrow">Board sizes</p>
+        <h2 class="h2" id="sizes-title">From a gift-sized board to a <em>1.4m centrepiece</em></h2>
+        <p class="lead">Every board comes with a serving guide. Tell us your guest count and we’ll recommend the right size.</p>
+      </div>
+      <ul role="list" class="sizes">
+        {
+          sizes.map((s, i) => (
+            <li data-reveal style={`--reveal-delay: ${i * 0.06}s`}>
+              <span class="size">{s.size}</span>
+              <span class="size-name">{s.name}</span>
+              <span class="size-fit">{s.fit}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="packages" aria-labelledby="packages-title">
+    <div class="container">
+      <div class="head" data-reveal>
+        <p class="eyebrow">Packages</p>
+        <h2 class="h2" id="packages-title">Popular combinations, <em>quoted to suit</em></h2>
+        <p class="lead">
+          Pricing depends on your guest count, location and styling, so every package is quoted to your event. Use these as a starting
+          point, and we’ll tailor the rest.
+        </p>
+      </div>
+      <ul role="list" class="packages">
+        {
+          packages.map((p, i) => (
+            <li class:list={['package', { 'package--featured': 'featured' in p && p.featured }]} data-reveal style={`--reveal-delay: ${i * 0.08}s`}>
+              {'featured' in p && p.featured && <span class="tag">Sweet & savoury</span>}
+              <h3 class="h3">{p.name}</h3>
+              <p class="summary">{p.summary}</p>
+              <ul role="list" class="includes">
+                {p.includes.map((item) => <li>{item}</li>)}
+              </ul>
+              <div class="package-foot">
+                <span class="quote-note">Quote on request</span>
+                <a class:list={['btn', { 'btn-outline': !('featured' in p && p.featured) }]} href={`/enquire?package=${encodeURIComponent(p.name)}`}>
+                  Get a quote
+                </a>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="note" data-reveal>
+        Delivery and on-site setup are included with every booking. Travel fees apply outside the Adelaide metro area.{' '}
+        <a href="/faq">Read the FAQ</a>.
+      </p>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .jump {
+    margin-bottom: clamp(24px, 4vw, 48px);
+  }
+
+  .jump ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .jump a {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.88rem;
+    text-decoration: none;
+    color: var(--ink-soft);
+    transition:
+      border-color 0.2s var(--ease),
+      color 0.2s var(--ease);
+  }
+
+  .jump a:hover {
+    border-color: var(--fig);
+    color: var(--fig);
+  }
+
+  .rows {
+    display: grid;
+    gap: clamp(72px, 9vw, 136px);
+    padding-block: clamp(24px, 4vw, 48px) var(--section);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    align-items: center;
+    gap: clamp(40px, 7vw, 112px);
+    scroll-margin-top: 110px;
+  }
+
+  .row--flip .row-art {
+    order: 2;
+  }
+
+  .row-art {
+    max-width: 480px;
+    width: 100%;
+  }
+
+  .row--flip .row-art {
+    justify-self: end;
+  }
+
+  .row-copy {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+
+  .num {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--fig);
+  }
+
+  .details {
+    display: grid;
+    gap: 0.6rem;
+    width: 100%;
+    padding-block: 0.4rem 0.6rem;
+  }
+
+  .details li {
+    display: flex;
+    gap: 0.8rem;
+    align-items: baseline;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .details li::before {
+    content: '';
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 859px) {
+    .row {
+      grid-template-columns: 1fr;
+    }
+
+    .row--flip .row-art {
+      order: 0;
+      justify-self: start;
+    }
+
+    .row-art {
+      max-width: 420px;
+    }
+  }
+
+  .head {
+    display: grid;
+    gap: 1rem;
+    max-width: 720px;
+    margin-bottom: clamp(36px, 5vw, 56px);
+  }
+
+  .sizes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--ink);
+  }
+
+  .sizes li {
+    display: grid;
+    align-content: start;
+    gap: 0.4rem;
+    padding: 1.6rem 1.4rem 1.6rem 0;
+  }
+
+  .sizes li + li {
+    padding-left: 1.4rem;
+    border-left: 1px solid var(--line);
+  }
+
+  .size {
+    font-family: var(--serif);
+    font-size: var(--step-4);
+    line-height: 1;
+    color: var(--fig);
+  }
+
+  .size-name {
+    font-weight: 600;
+  }
+
+  .size-fit {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 859px) {
+    .sizes {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .sizes li:nth-child(3) {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .sizes li:nth-child(n + 3) {
+      border-top: 1px solid var(--line);
+    }
+  }
+
+  .packages {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  .package {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: clamp(28px, 3vw, 40px);
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .package--featured {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .tag {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: var(--blush);
+    color: var(--fig-deep);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .summary {
+    color: var(--ink-soft);
+  }
+
+  .package--featured .summary {
+    color: rgb(251 248 243 / 0.75);
+  }
+
+  .includes {
+    display: grid;
+    gap: 0.55rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+
+  .package--featured .includes {
+    border-top-color: rgb(251 248 243 / 0.16);
+  }
+
+  .includes li {
+    display: flex;
+    gap: 0.7rem;
+  }
+
+  .includes li::before {
+    content: '✓';
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  .package-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 1.2rem;
+  }
+
+  .quote-note {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.15rem;
+  }
+
+  .package--featured .btn {
+    --btn-bg: var(--paper);
+    --btn-fg: var(--ink);
+    --btn-border: var(--paper);
+  }
+
+  .package--featured .btn:hover {
+    --btn-bg: var(--blush);
+    --btn-border: var(--blush);
+  }
+
+  .note {
+    margin-top: 2rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 959px) {
+    .packages {
+      grid-template-columns: 1fr;
+      max-width: 560px;
+    }
+  }
+</style>

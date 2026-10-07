@@ -1,0 +1,561 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import { photos } from '../data/photos';
+import { site } from '../data/site';
+
+const eventTypes = ['Wedding', 'Nikah', 'Engagement', 'Bridal shower', 'Baby shower', 'Gender reveal', 'Birthday', 'Corporate event', 'Other'];
+const guestRanges = ['Under 30', '30 to 60', '60 to 100', '100 to 150', '150+', 'Not sure yet'];
+const interests = [
+  { value: 'fruit', label: 'Fruit boards' },
+  { value: 'grazing', label: 'Grazing & cheese boards' },
+  { value: 'signature-board', label: '1.4m Signature Board' },
+  { value: 'desserts', label: 'Dessert cups & towers' },
+  { value: 'chocolates', label: 'Personalised chocolate bars' },
+  { value: 'drinks', label: 'Mocktail bar' },
+  { value: 'styling', label: 'Styling & hire' },
+  { value: 'full-setup', label: 'Full event setup' },
+  { value: 'unsure', label: 'Not sure, help me choose' },
+];
+const sources = ['Instagram', 'TikTok', 'Facebook', 'Google', 'Friend or family', 'Venue or vendor', 'Other'];
+
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+
+<Base
+  title="Request a quote"
+  description="Tell us about your event and we’ll send a personalised quote for fruit boards, grazing, dessert and mocktail tables in Adelaide."
+>
+  {turnstileSiteKey && <script is:inline slot="head" src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />}
+
+  <section class="enquire">
+    <div class="container grid">
+      <div class="form-col">
+        <p class="eyebrow">Request a quote</p>
+        <h1 class="h1">Tell us about your <em>event</em></h1>
+        <p class="lead">
+          The more you share, the better we can tailor your quote. Enquiries are free, with no obligation.
+        </p>
+
+        <form class="form" action="/api/enquiry" method="post" data-enquiry-form data-phone={site.phone} novalidate>
+          <fieldset>
+            <legend>About you</legend>
+            <div class="fields two">
+              <div class="field">
+                <label for="name">Your name</label>
+                <input id="name" name="name" type="text" autocomplete="name" required />
+              </div>
+              <div class="field">
+                <label for="phone">Phone</label>
+                <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required />
+              </div>
+              <div class="field span">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" required />
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Your event</legend>
+            <div class="fields two">
+              <div class="field">
+                <label for="eventType">Type of event</label>
+                <select id="eventType" name="eventType" required>
+                  <option value="" disabled selected>Choose one</option>
+                  {eventTypes.map((t) => <option>{t}</option>)}
+                </select>
+              </div>
+              <div class="field">
+                <label for="eventDate">Event date</label>
+                <input id="eventDate" name="eventDate" type="date" required />
+              </div>
+              <div class="field">
+                <label for="location">Suburb or venue</label>
+                <input id="location" name="location" type="text" placeholder="e.g. Glenelg, or Manna McLaren Vale" required />
+              </div>
+              <div class="field">
+                <label for="guests">Number of guests</label>
+                <select id="guests" name="guests" required>
+                  <option value="" disabled selected>Choose a range</option>
+                  {guestRanges.map((g) => <option>{g}</option>)}
+                </select>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>What are you interested in? <span class="optional">Choose any</span></legend>
+            <div class="chips">
+              {
+                interests.map((i) => (
+                  <label class="chip">
+                    <input type="checkbox" name="interests" value={i.value} />
+                    <span>{i.label}</span>
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>The details</legend>
+            <div class="fields">
+              <div class="field">
+                <label for="theme">Theme or colour palette <span class="optional">Optional</span></label>
+                <input id="theme" name="theme" type="text" placeholder="e.g. Sage and white, soft pink, gold accents" />
+              </div>
+              <div class="field">
+                <label for="dietary">Dietary requirements <span class="optional">Optional</span></label>
+                <input id="dietary" name="dietary" type="text" placeholder="e.g. Halal, vegetarian, nut-free" />
+              </div>
+              <div class="field">
+                <label for="message">Anything else we should know? <span class="optional">Optional</span></label>
+                <textarea id="message" name="message" rows="5" placeholder="Timings, setup access, inspiration, budget, questions…"></textarea>
+              </div>
+              <div class="field">
+                <label for="source">How did you hear about us? <span class="optional">Optional</span></label>
+                <select id="source" name="source">
+                  <option value="">Choose one</option>
+                  {sources.map((s) => <option>{s}</option>)}
+                </select>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="hp" aria-hidden="true">
+            <label for="company">Leave this field empty</label>
+            <input id="company" name="company" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
+          {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="light" />}
+
+          <div class="submit-row">
+            <button class="btn" type="submit" data-submit>
+              <span data-submit-label>Send enquiry</span> <span class="arrow" aria-hidden="true">→</span>
+            </button>
+            <p class="fineprint">We’ll only use your details to reply to your enquiry.</p>
+          </div>
+          <p class="form-error" role="alert" data-form-error hidden></p>
+        </form>
+
+        <div class="success" data-success hidden tabindex="-1">
+          <p class="eyebrow">Enquiry sent</p>
+          <h2 class="h2">Thank you, <em>we’ve got it.</em></h2>
+          <p class="lead">
+            We’ll check our availability for your date and get back to you with a personalised quote. If it’s urgent, call us on{' '}
+            <a href={site.phoneHref}>{site.phone}</a>.
+          </p>
+          <a class="btn btn-outline" href="/gallery">Browse the gallery while you wait</a>
+        </div>
+      </div>
+
+      <aside class="side">
+        <Photo photo={photos.babyShowerPinkYellow} ratio="4 / 5" shape="arch" sizes="(min-width: 960px) 360px, 0px" class="side-photo" />
+        <div class="side-card">
+          <h2 class="h3">What happens next</h2>
+          <ol role="list" class="next">
+            <li><span>1</span>We confirm availability for your date.</li>
+            <li><span>2</span>We send a personalised quote and recommendations.</li>
+            <li><span>3</span>A deposit secures your booking.</li>
+          </ol>
+          <div class="contact">
+            <p>Prefer to talk?</p>
+            <a href={site.phoneHref}>{site.phone}</a>
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-enquiry-form]')!;
+  const success = document.querySelector<HTMLElement>('[data-success]')!;
+  const errorBox = document.querySelector<HTMLElement>('[data-form-error]')!;
+  const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+  const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]')!;
+
+  // Dates in the past can't be booked.
+  const date = form.querySelector<HTMLInputElement>('#eventDate')!;
+  const today = new Date();
+  date.min = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+
+  // Prefill from links like /enquire?interest=fruit, ?package=Classic%20Package or ?event=Wedding.
+  const params = new URLSearchParams(location.search);
+  const interest = params.get('interest');
+  if (interest) {
+    const box = form.querySelector<HTMLInputElement>(`input[name="interests"][value="${CSS.escape(interest)}"]`);
+    if (box) box.checked = true;
+  }
+  const pkg = params.get('package');
+  if (pkg) {
+    const message = form.querySelector<HTMLTextAreaElement>('#message')!;
+    message.value = `I'm interested in the ${pkg}.`;
+  }
+  const event = params.get('event');
+  if (event) {
+    const select = form.querySelector<HTMLSelectElement>('#eventType')!;
+    if ([...select.options].some((o) => o.value === event)) select.value = event;
+  }
+
+  const showError = (message: string) => {
+    errorBox.textContent = message;
+    errorBox.hidden = false;
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.hidden = true;
+
+    if (!form.checkValidity()) {
+      form.classList.add('was-validated');
+      const firstInvalid = form.querySelector<HTMLElement>('input:invalid, select:invalid, textarea:invalid');
+      firstInvalid?.focus();
+      showError('Please fill in the highlighted fields so we can prepare your quote.');
+      return;
+    }
+
+    submit.disabled = true;
+    submitLabel.textContent = 'Sending…';
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Something went wrong.');
+
+      form.hidden = true;
+      success.hidden = false;
+      success.focus();
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (err) {
+      showError(
+        `${err instanceof Error ? err.message : 'Something went wrong.'} Please try again, or call us on ${form.dataset.phone}.`,
+      );
+      submit.disabled = false;
+      submitLabel.textContent = 'Send enquiry';
+    }
+  });
+</script>
+
+<style>
+  .enquire {
+    padding-block: clamp(48px, 7vw, 96px) var(--section);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: clamp(40px, 6vw, 96px);
+    align-items: start;
+  }
+
+  .form-col {
+    display: grid;
+    gap: 1.4rem;
+    max-width: 720px;
+  }
+
+  .form {
+    display: grid;
+    gap: 2.2rem;
+    margin-top: 1rem;
+  }
+
+  fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  legend {
+    width: 100%;
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--serif);
+    font-size: var(--step-2);
+    line-height: 1.2;
+  }
+
+  legend .optional {
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    margin-left: 0.4rem;
+  }
+
+  .fields {
+    display: grid;
+    gap: 1.1rem 1.2rem;
+  }
+
+  .fields.two {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .field.span {
+    grid-column: 1 / -1;
+  }
+
+  @media (max-width: 599px) {
+    .fields.two {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .field {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  label {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .optional {
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-height: 50px;
+    padding: 0.75rem 0.95rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--white);
+    color: var(--ink);
+    font: inherit;
+    font-size: 1rem;
+    transition:
+      border-color 0.2s var(--ease),
+      box-shadow 0.2s var(--ease);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 130px;
+  }
+
+  select {
+    appearance: none;
+    padding-right: 2.6rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%231e1916' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #a59a8f;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--fig);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fig) 16%, transparent);
+  }
+
+  .was-validated input:invalid,
+  .was-validated select:invalid,
+  .was-validated textarea:invalid {
+    border-color: #b42318;
+    box-shadow: 0 0 0 3px rgb(180 35 24 / 0.1);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .chip {
+    position: relative;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .chip input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .chip span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--white);
+    font-size: 0.92rem;
+    transition:
+      background-color 0.2s var(--ease),
+      border-color 0.2s var(--ease),
+      color 0.2s var(--ease);
+  }
+
+  .chip span::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--paper);
+  }
+
+  .chip:hover span {
+    border-color: var(--fig);
+  }
+
+  .chip input:checked + span {
+    background: var(--fig);
+    border-color: var(--fig);
+    color: var(--paper);
+  }
+
+  .chip input:checked + span::before {
+    border-color: var(--paper);
+    background: var(--paper)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8'%3E%3Cpath d='M1 4l2.5 2.5L9 1' fill='none' stroke='%236b2437' stroke-width='1.6'/%3E%3C/svg%3E")
+      center / 10px no-repeat;
+  }
+
+  .chip input:focus-visible + span {
+    outline: 2px solid var(--fig);
+    outline-offset: 2px;
+  }
+
+  .hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .submit-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 20px;
+  }
+
+  .submit-row .btn[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+
+  .fineprint {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .form-error {
+    padding: 0.9rem 1.1rem;
+    border-radius: 10px;
+    background: #fdf0ee;
+    color: #8a1c12;
+    font-size: 0.95rem;
+  }
+
+  .success {
+    display: grid;
+    gap: 1.2rem;
+    justify-items: start;
+    margin-top: 1rem;
+    padding: clamp(28px, 4vw, 48px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--white);
+    outline: none;
+  }
+
+  .success a:not(.btn) {
+    color: var(--fig);
+  }
+
+  .side {
+    position: sticky;
+    top: 104px;
+    display: grid;
+    gap: 20px;
+  }
+
+  .side-card {
+    display: grid;
+    gap: 1.2rem;
+    padding: 28px;
+    border-radius: var(--radius);
+    background: var(--linen);
+  }
+
+  .next {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .next li {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 0.6rem;
+    align-items: baseline;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+
+  .next span {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    color: var(--fig);
+  }
+
+  .contact {
+    display: grid;
+    gap: 0.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+
+  .contact p {
+    color: var(--muted);
+  }
+
+  .contact a {
+    color: var(--fig);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  @media (max-width: 959px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .side {
+      position: static;
+    }
+
+    .side :global(.side-photo) {
+      display: none;
+    }
+  }
+</style>

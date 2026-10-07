@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro';
+import PageIntro from '../components/PageIntro.astro';
+import { site } from '../data/site';
+---
+
+<Base title="Thank you" noindex>
+  <PageIntro
+    eyebrow="Enquiry sent"
+    align="center"
+    lead="We’ll check our availability for your date and get back to you with a personalised quote."
+  >
+    Thank you, <em>we’ve got it.</em>
+    <div slot="after" class="actions">
+      <a class="btn" href="/gallery">Browse the gallery</a>
+      <a class="btn btn-outline" href={site.phoneHref}>Call {site.phone}</a>
+    </div>
+  </PageIntro>
+  <div class="spacer"></div>
+</Base>
+
+<style>
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 0.6rem;
+  }
+
+  .spacer {
+    height: clamp(40px, 8vw, 120px);
+  }
+</style>
