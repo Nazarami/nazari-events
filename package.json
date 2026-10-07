@@ -2,6 +2,7 @@
   "name": "nazari-events",
   "description": "Rebrand and website for Nazari Events, a grazing and event styling business in Adelaide.",
   "homepage": "https://nazarievents.com",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "scripts": {

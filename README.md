@@ -140,5 +140,9 @@ docs/            screenshots and operations notes
 ## Credits
 
 Design, copy and development by **Amir Nazari**.
-Photography © Nazari Events, not licensed for reuse.
 Fonts: [Instrument Serif](https://fonts.google.com/specimen/Instrument+Serif) and [Instrument Sans](https://fonts.google.com/specimen/Instrument+Sans) (SIL Open Font License).
+
+## License
+
+The source code is released under the [MIT License](LICENSE).
+The photographs, the Nazari Events name, logo and monogram, and the website copy are © Nazari Events and aren't covered by that license.
